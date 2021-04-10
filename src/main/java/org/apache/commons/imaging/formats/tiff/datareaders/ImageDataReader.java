@@ -222,14 +222,16 @@ public abstract class ImageDataReader {
         for (int i = 0; i < bitsPerSample.length; i++) {
             final int bits = bitsPerSample[i];
             int sample = bis.readBits(bits);
-            if (bits < 8) {
-                final int sign = sample & 1;
-                sample = sample << (8 - bits); // scale to byte.
-                if (sign > 0) {
-                    sample = sample | ((1 << (8 - bits)) - 1); // extend to byte
+            if (!this.photometricInterpreter.isRaw()) {
+                if (bits < 8) {
+                    final int sign = sample & 1;
+                    sample = sample << (8 - bits); // scale to byte.
+                    if (sign > 0) {
+                        sample = sample | ((1 << (8 - bits)) - 1); // extend to byte
+                    }
+                } else if (bits > 8) {
+                    sample = sample >> (bits - 8); // extend to byte.
                 }
-            } else if (bits > 8) {
-                sample = sample >> (bits - 8); // extend to byte.
             }
             result[i] = sample;
         }
