@@ -52,4 +52,8 @@ public abstract class PhotometricInterpreter {
     protected int getBitsPerSample(final int offset) {
         return bitsPerSample[offset];
     }
+    
+    public boolean isRaw() {
+        return true;
+    }
 }
